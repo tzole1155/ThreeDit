@@ -84,6 +84,8 @@ def inference(input,model,device):
 
 def visualise_outputs(color,depth):
     device = depth.get_device()
+    if device == -1:
+        device = 'cpu'
     viz = Visualizers()
     imgs = viz.export_depth(depth)
     #visualise depth map
