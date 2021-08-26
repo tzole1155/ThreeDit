@@ -6,7 +6,6 @@
 import torch
 import numpy as np
 import functools
-import hydra.utils as hyu
 import omegaconf.omegaconf as omegaconf
 import typing
 import logging

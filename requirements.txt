@@ -1,2 +1,4 @@
 torch==1.7.1
 open3d
+plyfile==0.7.3
+omegaconf==2.0.6
