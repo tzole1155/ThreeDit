@@ -108,7 +108,7 @@ def visualise_outputs(color,depth):
     viz.write_ply(pred_filename, pred_xyz, None, colors)
     time.sleep(0.1)
     #export mesh
-    mesh = viz.export_mesh(pred_xyz,colors)
+    #mesh = viz.export_mesh(pred_xyz,colors)
     #save mesh
     # mesh_filename = os.path.join(static_path,"pred_mesh.obj")
     # if os.path.isfile(mesh_filename):
