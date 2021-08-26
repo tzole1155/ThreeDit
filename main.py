@@ -29,6 +29,7 @@ model_urls = {
     'UNet': 'https://github.com/tzole1155/StreamLitDemo/releases/download/Unet/unet.pth',
 }
 
+@st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
 def init_model(choice:str):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if choice == 'UNet':
@@ -125,19 +126,8 @@ def main():
     #init model
     model, device = init_model(choice)
 
-    ctx = ReportThread.get_report_ctx().session_id
-    this_session = None
-    current_session = Server.get_current()._get_session_info(ctx)
-    this_session = current_session.session
-    #st.write("ch",current_session.session)
-
-    #Server.get_current()._uploaded_file_mgr.remove_session_files(ctx)
-
-    h1 = None
-
     Image = st.file_uploader('Upload your panorama here',type=['jpg','jpeg','png'])
     if Image is not None:
-        caching.clear_cache()
         col1, col2 = st.beta_columns(2)
         Image = Image.read()
         #st.text(type(Image))
@@ -165,16 +155,6 @@ def main():
         #close file
         text_file.close()
         h2 = components.v1.html(html_string, height=600)
-        Server.get_current()._uploaded_file_mgr.remove_session_files(ctx)
-        #session = Server.get_current()._create_or_reuse_report_session(ws=None)
-        #session.handle_rerun_script_request(is_preheat=False)
-        #st.write(session)
-        del h1,h2
-    
-    #reset session
-    # session_info = Server.get_current()._get_session_info(ctx)
-    # Server.get_current()._uploaded_file_mgr.remove_session_files(ctx)
-    # st.write(session_info)
    
 
 
