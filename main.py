@@ -22,7 +22,7 @@ import omegaconf.omegaconf
 import io
 from PIL import Image
 import numpy as np
-import open3d as o3d
+#import open3d as o3d
 import time
 
 
