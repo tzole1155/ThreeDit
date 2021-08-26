@@ -123,6 +123,10 @@ def main():
     st.set_page_config(layout="wide")
     st.title('Pano3D 360 depth estimator')
 
+    st.write("You need to refresh your browser (ctrl + F5) everty time a new image is uploaded\
+        in order to delete cache and upload the correct 3d model!")
+    st.write("Best works on FireFox!")
+
     current_version = platform.release()
 
     st.write(current_version)
