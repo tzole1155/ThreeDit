@@ -4,6 +4,8 @@ import os
 import numpy as np
 import torch
 import functools
+import matplotlib
+matplotlib.use("Agg")
 from matplotlib import cm
 from matplotlib.colors import Colormap
 import plyfile
