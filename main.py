@@ -13,6 +13,7 @@ from utils.spherical import Spherical
 from utils.spherical_deprojection import SphericalDeprojection
 from utils.visualizers import Visualizers
 import os
+import platform
 try:
     from torch.hub import load_state_dict_from_url
 except ImportError:
@@ -118,6 +119,10 @@ def visualise_outputs(color,depth):
 def main():
     st.set_page_config(layout="wide")
     st.title('Pano3D 360 depth estimator')
+
+    current_version = platform.release()
+
+    st.write(current_version)
 
     menu = ['UNet']
     st.sidebar.header('Model Selection')
