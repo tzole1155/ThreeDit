@@ -1,4 +1,2 @@
 torch==1.7.1
-trimesh
 open3d
-opencv-python
