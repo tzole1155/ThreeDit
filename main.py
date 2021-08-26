@@ -125,7 +125,7 @@ def main():
 
     st.write("You need to refresh your browser (ctrl + F5) everty time a new image is uploaded\
         in order to delete cache and upload the correct 3d model!")
-    st.write("Best works on FireFox!")
+    st.write("Best view on FireFox!")
 
     current_version = platform.release()
 
