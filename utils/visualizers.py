@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 from matplotlib import cm
 from matplotlib.colors import Colormap
 import plyfile
-import open3d as o3d
+# import open3d as o3d
 import logging
 
 log = logging.getLogger(__name__)
@@ -20,25 +20,25 @@ class Visualizers(object):
     def __init__(self):
         pass
     
-    def export_mesh(self,
-        pcloud: np.array,colors:np.array,radius=0.1,
-                    max_nn=8,depth=10,threshold=0.05,recalculate=True) -> o3d.geometry.TriangleMesh:
-        pcd = o3d.geometry.PointCloud()
-        pcd.points = o3d.utility.Vector3dVector(pcloud.transpose(1,0))
-        pcd.colors = o3d.utility.Vector3dVector(colors.transpose(1,0)/255.)
-        # calculate normals
-        pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=radius, max_nn=max_nn))
-        # recalculate normals to fix culling issue
-        if recalculate:
-            pcd.orient_normals_towards_camera_location(camera_location=np.array([0., 0., 0.]))
-        # convert to mesh
-        mesh , densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd,depth=depth)
-        # filter out vertices
-        vertices_to_remove = densities < np.quantile(densities,threshold)
-        mesh.remove_vertices_by_mask(vertices_to_remove)
-        # save mesh
-        log.info("Exporting mesh has been finished!")
-        return mesh
+    # def export_mesh(self,
+    #     pcloud: np.array,colors:np.array,radius=0.1,
+    #                 max_nn=8,depth=10,threshold=0.05,recalculate=True) -> o3d.geometry.TriangleMesh:
+    #     pcd = o3d.geometry.PointCloud()
+    #     pcd.points = o3d.utility.Vector3dVector(pcloud.transpose(1,0))
+    #     pcd.colors = o3d.utility.Vector3dVector(colors.transpose(1,0)/255.)
+    #     # calculate normals
+    #     pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=radius, max_nn=max_nn))
+    #     # recalculate normals to fix culling issue
+    #     if recalculate:
+    #         pcd.orient_normals_towards_camera_location(camera_location=np.array([0., 0., 0.]))
+    #     # convert to mesh
+    #     mesh , densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd,depth=depth)
+    #     # filter out vertices
+    #     vertices_to_remove = densities < np.quantile(densities,threshold)
+    #     mesh.remove_vertices_by_mask(vertices_to_remove)
+    #     # save mesh
+    #     log.info("Exporting mesh has been finished!")
+    #     return mesh
     
     def export_dist(self,pcloud: np.array)->Tuple:
         dist_to_ceiling = pcloud[:,:20][1].mean()
@@ -181,24 +181,24 @@ def _save_depth(
             #imageio.imwrite(f'{key}_{index + i}.{ext}', (array)[i, :, :, :].transpose(1,2,0))
         #return b
 
-def _convert_to_mesh(pcloud: np.array,colors:np.array,radius=0.1,
-                    max_nn=8,depth=10,threshold=0.05,recalculate=True) -> o3d.geometry.TriangleMesh:
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(pcloud.transpose(1,0))
-    pcd.colors = o3d.utility.Vector3dVector(colors.transpose(1,0)/255.)
-    # calculate normals
-    pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=radius, max_nn=max_nn))
-    # recalculate normals to fix culling issue
-    if recalculate:
-        pcd.orient_normals_towards_camera_location(camera_location=np.array([0., 0., 0.]))
-    # convert to mesh
-    mesh , densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd,depth=depth)
-    # filter out vertices
-    vertices_to_remove = densities < np.quantile(densities,threshold)
-    mesh.remove_vertices_by_mask(vertices_to_remove)
-    # save mesh
-    print("finished processing mesh")
-    return mesh
+# def _convert_to_mesh(pcloud: np.array,colors:np.array,radius=0.1,
+#                     max_nn=8,depth=10,threshold=0.05,recalculate=True) -> o3d.geometry.TriangleMesh:
+#     pcd = o3d.geometry.PointCloud()
+#     pcd.points = o3d.utility.Vector3dVector(pcloud.transpose(1,0))
+#     pcd.colors = o3d.utility.Vector3dVector(colors.transpose(1,0)/255.)
+#     # calculate normals
+#     pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=radius, max_nn=max_nn))
+#     # recalculate normals to fix culling issue
+#     if recalculate:
+#         pcd.orient_normals_towards_camera_location(camera_location=np.array([0., 0., 0.]))
+#     # convert to mesh
+#     mesh , densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd,depth=depth)
+#     # filter out vertices
+#     vertices_to_remove = densities < np.quantile(densities,threshold)
+#     mesh.remove_vertices_by_mask(vertices_to_remove)
+#     # save mesh
+#     print("finished processing mesh")
+#     return mesh
 
 def _calc_distances(pcloud: np.array)->Tuple:
     dist_to_ceiling = pcloud[:,:20][1].mean()

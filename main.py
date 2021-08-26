@@ -22,7 +22,7 @@ import omegaconf.omegaconf
 import io
 from PIL import Image
 import numpy as np
-import open3d as o3d
+#import open3d as o3d
 import time
 
 
@@ -107,11 +107,11 @@ def visualise_outputs(color,depth):
     #export mesh
     mesh = viz.export_mesh(pred_xyz,colors)
     #save mesh
-    mesh_filename = os.path.join(static_path,"pred_mesh.obj")
-    if os.path.isfile(mesh_filename):
-        os.remove(mesh_filename)
-    o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
-    time.sleep(0.1)
+    # mesh_filename = os.path.join(static_path,"pred_mesh.obj")
+    # if os.path.isfile(mesh_filename):
+    #     os.remove(mesh_filename)
+    # o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
+    # time.sleep(0.1)
 
 
 
@@ -153,13 +153,13 @@ def main():
         #breakpoint()
         h1 = components.v1.html(html_string, height=600)
         #visualize mesh
-        text_file = open("./html/mesh.html", "r")
-        #read whole file to a string
-        html_string = text_file.read()
-        #time.sleep(1.5)
-        #close file
-        text_file.close()
-        h2 = components.v1.html(html_string, height=600)
+        # text_file = open("./html/mesh.html", "r")
+        # #read whole file to a string
+        # html_string = text_file.read()
+        # #time.sleep(1.5)
+        # #close file
+        # text_file.close()
+        # h2 = components.v1.html(html_string, height=600)
    
 
 
