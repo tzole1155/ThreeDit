@@ -32,7 +32,8 @@ model_urls = {
 
 @st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
 def init_model(choice:str):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
     if choice == 'UNet':
         #load model
         #read configuration file
