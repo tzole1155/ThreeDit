@@ -3,7 +3,6 @@ import imageio
 import os
 import numpy as np
 import torch
-import torchvision
 import functools
 from matplotlib import cm
 from matplotlib.colors import Colormap
