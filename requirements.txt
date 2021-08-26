@@ -3,3 +3,4 @@ open3d
 plyfile==0.7.3
 omegaconf==2.0.6
 imageio==2.9.0
+opencv-python-headless
