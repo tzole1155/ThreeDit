@@ -89,6 +89,7 @@ def inference(input,model,device):
     return depth
 
 def visualise_outputs(color,depth):
+    StaticFileHandler._get_cached_version = _get_cached_version
     device = depth.get_device()
     if device == -1:
         device = 'cpu'
@@ -115,7 +116,7 @@ def visualise_outputs(color,depth):
     pred_xyz = pred_xyz.reshape(3, -1).cpu().numpy()
     #write_ply(pred_filename, pred_xyz, None, colors)
     viz.write_ply(pred_filename, pred_xyz, None, colors)
-    time.sleep(0.1)
+    #time.sleep(0.1)
     #export mesh
     mesh = viz.export_mesh(pred_xyz,colors)
     #save mesh
@@ -123,12 +124,11 @@ def visualise_outputs(color,depth):
     if os.path.isfile(mesh_filename):
         os.remove(mesh_filename)
     o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
-    time.sleep(0.1)
+    #time.sleep(0.1)
 
 
 def main():
     #Use this for clearing cache!
-    StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
     st.title('Pano3D 360 depth estimator')
 
