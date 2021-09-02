@@ -156,13 +156,13 @@ def main():
             st.image(Image)
         #process image
         input = preprocess(Image)
-        #panorama viewer
-        text_file = open("./html/pano_viewer.html", "r")
-        #read whole file to a string
-        html_string = text_file.read()
-        #close file
-        text_file.close()
-        h1 = components.v1.html(html_string, height=600)
+        # #panorama viewer
+        # text_file = open("./html/pano_viewer.html", "r")
+        # #read whole file to a string
+        # html_string = text_file.read()
+        # #close file
+        # text_file.close()
+        # h1 = components.v1.html(html_string, height=600)
         #run model
         depth = inference(input,model,device)    
         #visualise outputs
