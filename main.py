@@ -37,7 +37,8 @@ def _get_cached_version(cls, abs_path: str):
     with cls._lock:
         return cls.get_content_version(abs_path)
 
-@st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
+#@st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
+@st.cache(allow_output_mutation=True, ttl=3600, max_entries=1)
 def init_model(choice:str):
     #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
