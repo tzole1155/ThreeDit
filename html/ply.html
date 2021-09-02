@@ -32,11 +32,12 @@
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
-				camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 15 );
-				camera.position.set( 3, 0.15, 3 );
+				camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 15 );
+				camera.position.set( 4.25, 2.92, 6.56 );
 				cameraTarget = new THREE.Vector3( 0, - 0.1, 0 );
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0x72645b );
+				// scene.background = new THREE.Color( 0x72645b );
+				scene.background = new THREE.Color( 0x333F49);
                 const controls = new OrbitControls(camera, container);
                 controls.enableDamping = true;
 	
@@ -136,6 +137,8 @@
 			function animate() {
 				requestAnimationFrame( animate );
 				render();
+				console.log(camera.position);
+				// console.log(camera.rotation);
 
 			}
 

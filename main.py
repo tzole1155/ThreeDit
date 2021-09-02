@@ -1,4 +1,5 @@
 from genericpath import exists
+from streamlit.state.session_state import WidgetArgs
 import torch
 import streamlit as st
 from streamlit import components
@@ -96,7 +97,14 @@ def visualise_outputs(color,depth):
     imgs = viz.export_depth(depth)
     static_path = file_util.get_static_dir()
     #visualise depth map
-    st.image(imgs[0].transpose(1, 2, 0))
+    col1, col2, col3 = st.columns([3,4,3])
+    with col1:
+        st.write("")
+    with col2:
+        st.markdown("<h2 style='text-align: center; color: 0xFAFAFA;'>Model's output</h2>", unsafe_allow_html=True)
+        st.image(imgs[0].transpose(1, 2, 0),use_column_width=True)
+    with col3:
+        st.write("")
     pred_filename = os.path.join(static_path,'pred_depth_map.jpg')
     im_ = Image.fromarray(np.uint8(imgs[0].transpose(1,2,0) * 255))
     im_.save(pred_filename,'JPEG')
@@ -131,13 +139,15 @@ def main():
     st.set_page_config(layout="wide")
     st.title('Pano3D 360 depth estimator')
 
-    st.write("You need to refresh your browser (ctrl + F5) everty time a new image is uploaded\
-        in order to delete cache and upload the correct 3d model!")
-    st.write("Best view on FireFox!")
+    #st.write("This web-page provides a live demo of the recentl")
 
-    current_version = platform.release()
+    text_file = open("intro.md", "r")
+    #read whole file to a string
+    md_string = text_file.read()
+    #close file
+    text_file.close()
 
-    st.write(current_version)
+    readme_text = st.markdown(md_string)
 
     menu = ['UNet']
     st.sidebar.header('Model Selection')
@@ -148,11 +158,16 @@ def main():
 
     Image = st.file_uploader('Upload your panorama here',type=['jpg','jpeg','png'])
     if Image is not None:
-        col1, col2 = st.beta_columns(2)
+        #col1, col2 = st.beta_columns(2)
+        col1, col2, col3 = st.columns([3,4,3])
+        with col1:
+            st.write("")
         Image = Image.read()
         #st.text(type(Image))
-        with col1:
-            st.image(Image)
+        with col2:
+            st.image(Image,use_column_width=True)
+        with col3:
+            st.write("")
         #process image
         input = preprocess(Image)
         # #panorama viewer

@@ -36,8 +36,12 @@ function main() {
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
 
-  camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 15 );
-  camera.position.set( 3, 0.15, 3 );
+  // camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 15 );
+  camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 15 );
+
+  // camera.position.set( 3, 0.15, 3 );
+  // camera.position.set( 7.4, 0.025, -3.56 );
+  camera.position.set( 4.25, 2.92, 6.56 );
 
   const controls = new OrbitControls(camera, container);
   //controls.target.set(0, 5, 0);
@@ -45,7 +49,8 @@ function main() {
 
   scene = new THREE.Scene();
   //scene.background = new THREE.Color('black');
-  scene.background = new THREE.Color( 0x72645b );
+  //scene.background = new THREE.Color( 0x72645b );
+  scene.background = new THREE.Color( 0x333F49);
 
 //   {
 //     const planeSize = 40;
