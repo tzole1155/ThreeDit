@@ -22,13 +22,19 @@ import omegaconf.omegaconf
 import io
 from PIL import Image
 import numpy as np
-#import open3d as o3d
+import open3d as o3d # this should not be included when deployed in GitHub
 import time
+from streamlit.server.server import StaticFileHandler
 
 
 model_urls = {
     'UNet': 'https://github.com/tzole1155/StreamLitDemo/releases/download/Unet/unet.pth',
 }
+
+@classmethod
+def _get_cached_version(cls, abs_path: str):
+    with cls._lock:
+        return cls.get_content_version(abs_path)
 
 @st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
 def init_model(choice:str):
@@ -88,12 +94,15 @@ def visualise_outputs(color,depth):
         device = 'cpu'
     viz = Visualizers()
     imgs = viz.export_depth(depth)
+    static_path = file_util.get_static_dir()
     #visualise depth map
     st.image(imgs[0].transpose(1, 2, 0))
+    pred_filename = os.path.join(static_path,'pred_depth_map.jpg')
+    im_ = Image.fromarray(np.uint8(imgs[0].transpose(1,2,0) * 255))
+    im_.save(pred_filename,'JPEG')
     #point cloud exporter
     sgrid = Spherical(width=512,mode='pi',long_offset_pi=-0.5).to(device)(imgs)
     pcloud = SphericalDeprojection().to(device)(depth,sgrid)
-    static_path = file_util.get_static_dir()
     pred_xyz = pcloud[0]
     rgb = color[0] * 255.0
     if isinstance(rgb,np.ndarray):
@@ -108,18 +117,18 @@ def visualise_outputs(color,depth):
     viz.write_ply(pred_filename, pred_xyz, None, colors)
     time.sleep(0.1)
     #export mesh
-    #mesh = viz.export_mesh(pred_xyz,colors)
+    mesh = viz.export_mesh(pred_xyz,colors)
     #save mesh
-    # mesh_filename = os.path.join(static_path,"pred_mesh.obj")
-    # if os.path.isfile(mesh_filename):
-    #     os.remove(mesh_filename)
-    # o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
-    # time.sleep(0.1)
-
-
+    mesh_filename = os.path.join(static_path,"pred_mesh.obj")
+    if os.path.isfile(mesh_filename):
+        os.remove(mesh_filename)
+    o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
+    time.sleep(0.1)
 
 
 def main():
+    #Use this for clearing cache!
+    StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
     st.title('Pano3D 360 depth estimator')
 
@@ -147,6 +156,13 @@ def main():
             st.image(Image)
         #process image
         input = preprocess(Image)
+        #panorama viewer
+        text_file = open("./html/pano_viewer.html", "r")
+        #read whole file to a string
+        html_string = text_file.read()
+        #close file
+        text_file.close()
+        h1 = components.v1.html(html_string, height=600)
         #run model
         depth = inference(input,model,device)    
         #visualise outputs
@@ -160,13 +176,13 @@ def main():
         #breakpoint()
         h1 = components.v1.html(html_string, height=600)
         #visualize mesh
-        # text_file = open("./html/mesh.html", "r")
-        # #read whole file to a string
-        # html_string = text_file.read()
-        # #time.sleep(1.5)
-        # #close file
-        # text_file.close()
-        # h2 = components.v1.html(html_string, height=600)
+        text_file = open("./html/mesh.html", "r")
+        #read whole file to a string
+        html_string = text_file.read()
+        #time.sleep(1.5)
+        #close file
+        text_file.close()
+        h2 = components.v1.html(html_string, height=600)
    
 
 

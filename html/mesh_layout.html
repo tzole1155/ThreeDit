@@ -4,8 +4,7 @@
 		<title>three.js webgl - OBJ</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-		<meta http-equiv="Expires" content="-1" />
+		<meta http-equiv="Cache-control" content="no-cache">
 		
 
 	</head>
@@ -28,7 +27,6 @@ THREE.Cache.enabled = false
 main();
 animate();
 
-
 function main() {
   container = document.createElement( 'div' );
   document.body.appendChild( container );
@@ -46,27 +44,6 @@ function main() {
   scene = new THREE.Scene();
   //scene.background = new THREE.Color('black');
   scene.background = new THREE.Color( 0x72645b );
-
-//   {
-//     const planeSize = 40;
-
-//     // const loader = new THREE.TextureLoader();
-//     // const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/checker.png');
-//     // texture.wrapS = THREE.RepeatWrapping;
-//     // texture.wrapT = THREE.RepeatWrapping;
-//     // texture.magFilter = THREE.NearestFilter;
-//     // const repeats = planeSize / 2;
-//     // texture.repeat.set(repeats, repeats);
-
-//     const planeGeo = new THREE.PlaneGeometry(planeSize, planeSize);
-//     // const planeMat = new THREE.MeshPhongMaterial({
-//     //   map: texture,
-//     //   side: THREE.DoubleSide,
-//     // });
-//     const mesh = new THREE.Mesh(planeGeo);
-//     mesh.rotation.x = Math.PI * -.5;
-//     scene.add(mesh);
-//   }
 
   {
     const skyColor = 0xB1E1FF;  // light blue
@@ -86,25 +63,25 @@ function main() {
   }
 
   {
-    //const mtlLoader = new MTLLoader();
-    //mtlLoader.load('https://threejsfundamentals.org/threejs/resources/models/windmill/windmill.mtl', (mtl) => {
-      //mtl.preload();
+      const mtlLoader = new MTLLoader();
+      mtlLoader.load('pano_1.mtl', (mtl) => {
+      mtl.preload();
       let objLoader = new OBJLoader();
-      //objLoader.setMaterials(mtl);
-      objLoader.load('pred_mesh.obj', (mesh) => {
+      objLoader.setMaterials(mtl);
+      objLoader.load('pano_1.obj', (mesh) => {
 		mesh.position.x = 0;
 		mesh.position.y = -1;
 		mesh.position.z = 0;
-        mesh.rotateY(Math.PI / 2);
-        mesh.rotateZ(Math.PI);
+    mesh.rotateX(Math.PI / 2);
+    mesh.rotateY(Math.PI);
 		mesh.scale.multiplyScalar(0.5 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add(mesh);
 		mesh = null;
       });
-    //});
-	objLoader = null;
+    });
+	//objLoader = null;
   }
 
   container.appendChild( renderer.domElement );
