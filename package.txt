@@ -1,1 +1,1 @@
-libgl
+libgl1-mesa-glx
