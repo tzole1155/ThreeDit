@@ -89,7 +89,6 @@ def inference(input,model,device):
     return depth
 
 def visualise_outputs(color,depth):
-    StaticFileHandler._get_cached_version = _get_cached_version
     device = depth.get_device()
     if device == -1:
         device = 'cpu'
@@ -167,6 +166,8 @@ def main():
         depth = inference(input,model,device)    
         #visualise outputs
         visualise_outputs(input,depth)
+        #clear cache?
+        StaticFileHandler._get_cached_version = _get_cached_version
         text_file = open("./html/ply.html", "r")
         #read whole file to a string
         html_string = text_file.read()
