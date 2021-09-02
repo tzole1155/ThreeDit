@@ -72,13 +72,13 @@
 					scene.add( mesh );
                     //mesh = null;
                     //geometry = null;
-                    geometry.dispose();
-                    material.dispose();
+                    // geometry.dispose();
+                    // material.dispose();
                     //mesh.dispose();
 
 				} );
 
-                loader = null;
+                //loader = null;
 
 				// Lights
 
@@ -137,7 +137,7 @@
 			function animate() {
 				requestAnimationFrame( animate );
 				render();
-				console.log(camera.position);
+				//console.log(camera.position);
 				// console.log(camera.rotation);
 
 			}

@@ -106,10 +106,10 @@ function main() {
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add(mesh);
-		mesh = null;
+		//mesh = null;
       });
     //});
-	objLoader = null;
+	//objLoader = null;
   }
 
   container.appendChild( renderer.domElement );
@@ -145,9 +145,9 @@ function animate() {
 
 		function render() {
 				//camera.lookAt( cameraTarget );
-				renderer.dispose();
-				renderer.resetGLState();
-				renderer.clear()
+				// renderer.dispose();
+				// renderer.resetGLState();
+				// renderer.clear()
 				renderer.render( scene, camera );
 			}
 

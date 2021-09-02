@@ -101,7 +101,7 @@ def visualise_outputs(color,depth):
     with col1:
         st.write("")
     with col2:
-        st.markdown("<h2 style='text-align: center; color: 0xFAFAFA;'>Model's output</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; font-family: sans serif; color: 0xFAFAFA;'>Model's output</h2>", unsafe_allow_html=True)
         st.image(imgs[0].transpose(1, 2, 0),use_column_width=True)
     with col3:
         st.write("")
@@ -199,6 +199,18 @@ def main():
         #close file
         text_file.close()
         h2 = components.v1.html(html_string, height=600)
+        #download=st.button('Download Point Cloud')
+        static_path = file_util.get_static_dir()
+        #if download:
+        #pred_filename = os.path.join(static_path,'pred_pointcloud.ply')
+        # html_btn = f'<form method="get" action="pred_pointcloud.ply">\
+        #             <button class="css-1ubkpyc edgvbvh1" type="submit">Download Point Cloud</button>\
+        #             </form>'
+        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button class="css-1ubkpyc edgvbvh1">Download Point Cloud!</button></a>'
+        st.markdown(linko, unsafe_allow_html=True)
+        linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button class="css-1ubkpyc edgvbvh1">Download Reconstructed Mesh!</button></a>'
+        st.markdown(linko, unsafe_allow_html=True)
+
    
 
 
