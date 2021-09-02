@@ -2,6 +2,6 @@ torch==1.7.1
 plyfile==0.7.3
 omegaconf==2.0.6
 imageio==2.9.0
-https://github.com/funatsufumiya/Open3D/releases/download/v0.13.0-aarch64-raspberrypi/open3d-0.13.0+c3f9de224-cp37-cp37m-linux_aarch64.whl
+open3d
 pytorch_lightning
 matplotlib==3.3.4
