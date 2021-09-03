@@ -96,22 +96,38 @@ def visualise_outputs(color,depth):
         device = 'cpu'
     viz = Visualizers()
     imgs = viz.export_depth(depth)
+    if not imgs.all():
+        st.warning("Model is running...")
+        st.stop()
+    st.success("Prediction has been made!")
     static_path = file_util.get_static_dir()
     #visualise depth map
+    st.markdown("## Predicted depth map", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([3,4,3])
     with col1:
         st.write("")
     with col2:
-        st.markdown("<h2 style='text-align: center; font-family: sans serif; color: 0xFAFAFA;'>Model's output</h2>", unsafe_allow_html=True)
-        st.image(imgs[0].transpose(1, 2, 0),use_column_width=True)
+        #st.markdown("<p style='text-align: center;'>Panorama image</p>", unsafe_allow_html=True)
+        st.image(imgs[0].transpose(1, 2, 0),use_column_width=True,caption='Predicted depth map')
+        #st.markdown("<p style='text-align: center;'>Predicted depth map</p>", unsafe_allow_html=True)
     with col3:
         st.write("")
     pred_filename = os.path.join(static_path,'pred_depth_map.jpg')
     im_ = Image.fromarray(np.uint8(imgs[0].transpose(1,2,0) * 255))
     im_.save(pred_filename,'JPEG')
     #point cloud exporter
+    # i = 0
+    # latest_iteration = st.empty()
+    # bar = st.progress(0)
+    # for i in range(100):
+    #     bar.progress(i + 1)
     sgrid = Spherical(width=512,mode='pi',long_offset_pi=-0.5).to(device)(imgs)
     pcloud = SphericalDeprojection().to(device)(depth,sgrid)
+    #breakpoint()
+    if not torch.is_tensor(pcloud[0]):
+        st.warning("Creating point cloud...")
+        st.stop()
+    st.success("Point cloud has been created!")
     pred_xyz = pcloud[0]
     rgb = color[0] * 255.0
     if isinstance(rgb,np.ndarray):
@@ -132,13 +148,16 @@ def visualise_outputs(color,depth):
     if os.path.isfile(mesh_filename):
         os.remove(mesh_filename)
     o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
-    #time.sleep(0.1)
+
+
 
 
 def main():
     #Use this for clearing cache!
     st.set_page_config(layout="wide")
-    st.title('Pano3D 360 depth estimator')
+    #st.title('Pano3D 360 depth estimator')
+    st.image(os.path.join('html','imgs','banner.png'), use_column_width  = True)
+    st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
 
     #st.write("This web-page provides a live demo of the recentl")
 
@@ -160,26 +179,20 @@ def main():
     Image = st.file_uploader('Upload your panorama here',type=['jpg','jpeg','png'])
     if Image is not None:
         #col1, col2 = st.beta_columns(2)
+        st.markdown("## Input Panorama", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([3,4,3])
         with col1:
             st.write("")
         Image = Image.read()
         #st.text(type(Image))
         with col2:
-            st.image(Image,use_column_width=True)
+            st.image(Image,use_column_width=True,caption='Input panorama')
         with col3:
             st.write("")
         #process image
         input = preprocess(Image)
-        # #panorama viewer
-        # text_file = open("./html/pano_viewer.html", "r")
-        # #read whole file to a string
-        # html_string = text_file.read()
-        # #close file
-        # text_file.close()
-        # h1 = components.v1.html(html_string, height=600)
         #run model
-        depth = inference(input,model,device)    
+        depth = inference(input,model,device)
         #visualise outputs
         visualise_outputs(input,depth)
         #clear cache?
@@ -191,7 +204,12 @@ def main():
         #close file
         text_file.close()
         #breakpoint()
+        st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
+        st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
+        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button class="css-1ubkpyc edgvbvh1">Download Point Cloud!</button></a>'
+        st.markdown(linko, unsafe_allow_html=True)
+        #st.markdown("<p style='text-align: center;'>Predicted Point Cloud</p>", unsafe_allow_html=True)
         #visualize mesh
         text_file = open("./html/mesh.html", "r")
         #read whole file to a string
@@ -199,18 +217,21 @@ def main():
         #time.sleep(1.5)
         #close file
         text_file.close()
+        st.markdown("## Reconstructed Mesh", unsafe_allow_html=True)
+        st.markdown("Inspect the reconstructed mesh through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h2 = components.v1.html(html_string, height=600)
+        # st.markdown("<p style='text-align: center;'>Reconstructed Mesh</p>", unsafe_allow_html=True)
         #download=st.button('Download Point Cloud')
         static_path = file_util.get_static_dir()
-        #if download:
-        #pred_filename = os.path.join(static_path,'pred_pointcloud.ply')
-        # html_btn = f'<form method="get" action="pred_pointcloud.ply">\
-        #             <button class="css-1ubkpyc edgvbvh1" type="submit">Download Point Cloud</button>\
-        #             </form>'
-        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button class="css-1ubkpyc edgvbvh1">Download Point Cloud!</button></a>'
-        st.markdown(linko, unsafe_allow_html=True)
         linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button class="css-1ubkpyc edgvbvh1">Download Reconstructed Mesh!</button></a>'
         st.markdown(linko, unsafe_allow_html=True)
+
+        text_file = open("Ackn.md", "r")
+        #read whole file to a string
+        md_string = text_file.read()
+        #close file
+        text_file.close()
+        ack_text = st.markdown(md_string)
 
    
 
