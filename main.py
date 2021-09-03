@@ -156,7 +156,7 @@ def main():
     #Use this for clearing cache!
     st.set_page_config(layout="wide")
     #st.title('Pano3D 360 depth estimator')
-    st.image(os.path.join('html','imgs','banner.png'), use_column_width  = True)
+    st.image(os.path.join('Images','banner.png'), use_column_width  = True)
     st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
 
     #st.write("This web-page provides a live demo of the recentl")
