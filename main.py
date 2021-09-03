@@ -157,11 +157,12 @@ def visualise_outputs(color,depth):
 def main():
     #Use this for clearing cache!
     st.set_page_config(layout="wide")
+    static_path = file_util.get_static_dir()
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/StreamLitDemo/main/Images/Banner.png',
-        "banner.png")
+        os.path.join(static_path,"banner.png"))
     #st.title('Pano3D 360 depth estimator')
-    banner = PIL.Image.open("banner.png")
+    banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
     # st.image(os.path.join('Images','banner.png'), use_column_width  = True)
     st.image(banner, use_column_width  = True)
     st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
