@@ -305,25 +305,26 @@ def main():
         linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button class="css-1ubkpyc edgvbvh1">Download Point Cloud!</button></a>'
         st.markdown(linko, unsafe_allow_html=True)
         #mesh
-        export_mesh(viz,pred_xyz,colors,static_path)
-        text_file = open("./html/mesh.html", "r")
-        #read whole file to a string
-        html_string = text_file.read()
-        text_file.close()
-        st.markdown("## Reconstructed Mesh", unsafe_allow_html=True)
-        st.markdown("Inspect the reconstructed mesh through the interactive 3D Model Viewer", unsafe_allow_html=True)
-        h2 = components.v1.html(html_string, height=600)
-        st.success("Mesh has been created!")
-        linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button class="css-1ubkpyc edgvbvh1">Download Reconstructed Mesh!</button></a>'
-        st.markdown(linko, unsafe_allow_html=True)
-        #Acknow
-        text_file = open("Ackn.md", "r")
-        #read whole file to a string
-        md_string = text_file.read()
-        #close file
-        text_file.close()
-        ack_text = st.markdown(md_string)
-        #trigger_rerun()
+        if st.button('Reconstruct mesh'):
+            export_mesh(viz,pred_xyz,colors,static_path)
+            text_file = open("./html/mesh.html", "r")
+            #read whole file to a string
+            html_string = text_file.read()
+            text_file.close()
+            st.markdown("## Reconstructed Mesh", unsafe_allow_html=True)
+            st.markdown("Inspect the reconstructed mesh through the interactive 3D Model Viewer", unsafe_allow_html=True)
+            h2 = components.v1.html(html_string, height=600)
+            st.success("Mesh has been created!")
+            linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button class="css-1ubkpyc edgvbvh1">Download Reconstructed Mesh!</button></a>'
+            st.markdown(linko, unsafe_allow_html=True)
+            #Acknow
+            text_file = open("Ackn.md", "r")
+            #read whole file to a string
+            md_string = text_file.read()
+            #close file
+            text_file.close()
+            ack_text = st.markdown(md_string)
+            #trigger_rerun()
 
    
 
