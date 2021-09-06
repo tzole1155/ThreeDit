@@ -1,2 +1,2 @@
-# StreamLitDemo
-Repository for creating a demo streamlit app.
+# Pano3D demo
+Repository for running Pano3D models.
