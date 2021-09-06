@@ -1,4 +1,5 @@
 from genericpath import exists
+import logging
 import PIL
 from streamlit.state.session_state import WidgetArgs
 import torch
@@ -106,7 +107,7 @@ def get_point_cloud(viz,depth,color,static_path):
     sgrid = Spherical(width=512,mode='pi',long_offset_pi=-0.5).to(device)(depth)
     isPcloud = False
     while not isPcloud:
-        st.warning("Creating point cloud...")
+        pc_warn = st.warning("Creating point cloud...")
         pcloud = SphericalDeprojection().to(device)(depth,sgrid)
         pred_xyz = pcloud[0]
         rgb = color[0] * 255.0
@@ -121,22 +122,29 @@ def get_point_cloud(viz,depth,color,static_path):
         viz.write_ply(pred_filename, pred_xyz, None, colors)
         if torch.is_tensor(pcloud):
             isPcloud=True
+            pc_warn.empty()
     
     return pred_xyz,colors
 
 
 def export_mesh(viz,pred_xyz,colors,static_path):
     isMesh = False
+    start = time.time()
     while not isMesh:
-        st.warning("Reconstructing mesh...")
+        mes_warn = st.warning("Reconstructing mesh...")
         mesh = viz.export_mesh(pred_xyz,colors)
         #save mesh
+        end = time.time()
+        if((end-start)) > 5: #secs
+            mes_warn.empty()
+            mes_warn = st.warning("This might take a while...")
         mesh_filename = os.path.join(static_path,"pred_mesh.obj")
         if os.path.isfile(mesh_filename):
             os.remove(mesh_filename)
         o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
         if mesh:
             isMesh = True
+            mes_warn.empty()
 
 
 def visualise_outputs(color,depth):
@@ -278,10 +286,11 @@ def main():
         #run model
         isDepth = False
         while not isDepth:
-            st.warning("Model is running...")
+            md_warn = st.warning("Model is running...")
             depth = inference(input,model,device)
             if torch.is_tensor(depth):
                 isDepth = True
+                md_warn.empty()
         #visualise outputs
         imgs = get_depth_map(viz,depth,static_path)
         col1, col2, col3 = st.columns([3,4,3])

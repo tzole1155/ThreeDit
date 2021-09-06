@@ -9,3 +9,6 @@ The banner image has been created by using the 3D models provided by [Sketchfab]
 
 - [ElementalNinja](https://sketchfab.com/ElementalNinja)
 - [MrMirai](https://sketchfab.com/MrMirai)
+
+## Inquires
+If you have more questions please contact [Nikolaos Zioulis](https://zokin.github.io/) and/or [Georgios Albanis](https://tzole1155.github.io/).
