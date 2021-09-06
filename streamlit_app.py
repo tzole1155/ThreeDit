@@ -42,7 +42,8 @@ def _get_cached_version(cls, abs_path: str):
         return cls.get_content_version(abs_path)
 
 #@st.cache(allow_output_mutation=True, ttl=120000, max_entries=1)
-@st.cache(allow_output_mutation=True, ttl=3600, max_entries=1)
+#@st.cache(allow_output_mutation=True, ttl=3600, max_entries=1)
+@st.cache(allow_output_mutation=True, ttl=1800, max_entries=1)
 def init_model(choice:str):
     #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
@@ -129,15 +130,11 @@ def get_point_cloud(viz,depth,color,static_path):
 
 def export_mesh(viz,pred_xyz,colors,static_path):
     isMesh = False
-    start = time.time()
     while not isMesh:
         mes_warn = st.warning("Reconstructing mesh...")
+        mes_warn_2 =  st.warning("This might take a while...")
         mesh = viz.export_mesh(pred_xyz,colors)
         #save mesh
-        end = time.time()
-        if((end-start)) > 5: #secs
-            mes_warn.empty()
-            mes_warn = st.warning("This might take a while...")
         mesh_filename = os.path.join(static_path,"pred_mesh.obj")
         if os.path.isfile(mesh_filename):
             os.remove(mesh_filename)
@@ -145,62 +142,7 @@ def export_mesh(viz,pred_xyz,colors,static_path):
         if mesh:
             isMesh = True
             mes_warn.empty()
-
-
-def visualise_outputs(color,depth):
-    device = depth.get_device()
-    if device == -1:
-        device = 'cpu'
-    viz = Visualizers()
-    imgs = viz.export_depth(depth)
-    static_path = file_util.get_static_dir()
-    #visualise depth map
-    st.markdown("## Predicted depth map", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([3,4,3])
-    with col1:
-        st.write("")
-    with col2:
-        #st.markdown("<p style='text-align: center;'>Panorama image</p>", unsafe_allow_html=True)
-        st.image(imgs[0].transpose(1, 2, 0),use_column_width=True,caption='Predicted depth map')
-        #st.markdown("<p style='text-align: center;'>Predicted depth map</p>", unsafe_allow_html=True)
-    with col3:
-        st.write("")
-    pred_filename = os.path.join(static_path,'pred_depth_map.jpg')
-    im_ = Image.fromarray(np.uint8(imgs[0].transpose(1,2,0) * 255))
-    im_.save(pred_filename,'JPEG')
-    #point cloud exporter
-    # i = 0
-    # latest_iteration = st.empty()
-    # bar = st.progress(0)
-    # for i in range(100):
-    #     bar.progress(i + 1)
-    sgrid = Spherical(width=512,mode='pi',long_offset_pi=-0.5).to(device)(imgs)
-    pcloud = SphericalDeprojection().to(device)(depth,sgrid)
-    #breakpoint()
-    if not torch.is_tensor(pcloud[0]):
-        st.warning("Creating point cloud...")
-        st.stop()
-    st.success("Point cloud has been created!")
-    pred_xyz = pcloud[0]
-    rgb = color[0] * 255.0
-    if isinstance(rgb,np.ndarray):
-        colors = rgb.reshape(3, - 1).astype(np.uint8)
-    else:
-        colors = rgb.reshape(3, - 1).cpu().numpy().astype(np.uint8)    
-    pred_filename = os.path.join(static_path,'pred_pointcloud.ply')
-    if os.path.isfile(pred_filename):
-        os.remove(pred_filename)
-    pred_xyz = pred_xyz.reshape(3, -1).cpu().numpy()
-    #write_ply(pred_filename, pred_xyz, None, colors)
-    viz.write_ply(pred_filename, pred_xyz, None, colors)
-    #time.sleep(0.1)
-    #export mesh
-    mesh = viz.export_mesh(pred_xyz,colors)
-    #save mesh
-    mesh_filename = os.path.join(static_path,"pred_mesh.obj")
-    if os.path.isfile(mesh_filename):
-        os.remove(mesh_filename)
-    o3d.io.write_triangle_mesh(mesh_filename, mesh, write_triangle_uvs=True)
+            mes_warn_2.empty()
 
 def trigger_rerun():
 
@@ -333,7 +275,6 @@ def main():
             #close file
             text_file.close()
             ack_text = st.markdown(md_string)
-            #trigger_rerun()
 
    
 
