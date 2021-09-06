@@ -4,7 +4,7 @@ This is a live demo showcasing the models developed within [Pano3D](https://vcl3
 
 You can infer your's room geometry and donwnload the predicted point cloud by simply uploading a panorama image.
 
-Both models are available for downloading.
+Both data formats are available for downloading.
 
 **Notes**
 

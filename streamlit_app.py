@@ -32,7 +32,7 @@ import urllib.request
 
 
 model_urls = {
-    'UNet': 'https://github.com/tzole1155/StreamLitDemo/releases/download/Unet/unet.pth',
+    'UNet': 'https://github.com/tzole1155/ThreeDit/releases/download/Unet/unet.pth',
 }
 
 @classmethod
@@ -233,7 +233,7 @@ def main():
     st.set_page_config(layout="wide")
     static_path = file_util.get_static_dir()
     urllib.request.urlretrieve(
-        'https://raw.githubusercontent.com/tzole1155/StreamLitDemo/main/Images/Banner.png',
+        'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
     #st.title('Pano3D 360 depth estimator')
     banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
