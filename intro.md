@@ -19,6 +19,10 @@ For taking a panorama without a 360 camera, you can use the following applicatio
 Due to the limitation in terms of resources provided by the streamlit cloud please be aware that the inference and the mesh reconstruction could take some time.
 ``
 
+```
+Before uploading a new panorama please refresh your browser.
+```
+
 ## Upload panorama
 
 
