@@ -115,25 +115,11 @@ function main() {
   container.appendChild( renderer.domElement );
 
   window.addEventListener( 'resize', onWindowResize );
-
-//  console.log("init obj");
-//  console.log(renderer.info);
-
- 
-
-//   function render() {
-
-//     renderer.render(scene, camera);
-
-//     requestAnimationFrame(render);
-//   }
-
   
-
 }
 
-function onWindowResize(renderer) {
-	camera.aspect = window.innerWidth / window.innerHeight;
+function onWindowResize() {
+	      camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -143,13 +129,9 @@ function animate() {
 		requestAnimationFrame( animate );
 		render();}
 
-		function render() {
-				//camera.lookAt( cameraTarget );
-				// renderer.dispose();
-				// renderer.resetGLState();
-				// renderer.clear()
-				renderer.render( scene, camera );
-			}
+function render() {
+		renderer.render( scene, camera );
+}
 
 
 		</script>

@@ -30,6 +30,9 @@ import open3d as o3d # this should not be included when deployed in GitHub
 import time
 from streamlit.server.server import StaticFileHandler
 import urllib.request
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 
 
 model_urls = {
@@ -185,13 +188,12 @@ def main():
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
-    #st.title('Pano3D 360 depth estimator')
+    mesh_filename = os.path.join(static_path,"pred_mesh.obj")
+    if os.path.isfile(mesh_filename):
+            os.remove(mesh_filename)
     banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
-    # st.image(os.path.join('Images','banner.png'), use_column_width  = True)
     st.image(banner, use_column_width  = True)
     st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
-
-    #st.write("This web-page provides a live demo of the recentl")
 
     text_file = open("intro.md", "r")
     #read whole file to a string
@@ -239,7 +241,6 @@ def main():
         with col1:
             st.write("")
         with col2:
-            #st.markdown("<p style='text-align: center;'>Panorama image</p>", unsafe_allow_html=True)
             st.image(imgs[0].transpose(1, 2, 0),use_column_width=True,caption='Predicted depth map')
             #st.markdown("<p style='text-align: center;'>Predicted depth map</p>", unsafe_allow_html=True)
         with col3:
