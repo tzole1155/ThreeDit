@@ -254,7 +254,7 @@ def main():
         st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
         st.success("Point cloud has been created!")
-        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button class="css-1ubkpyc edgvbvh1">Download Point Cloud!</button></a>'
+        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
         st.markdown(linko, unsafe_allow_html=True)
         #mesh
         if st.button('Reconstruct mesh'):
@@ -267,7 +267,7 @@ def main():
             st.markdown("Inspect the reconstructed mesh through the interactive 3D Model Viewer", unsafe_allow_html=True)
             h2 = components.v1.html(html_string, height=600)
             st.success("Mesh has been created!")
-            linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button class="css-1ubkpyc edgvbvh1">Download Reconstructed Mesh!</button></a>'
+            linko= f'<a href="pred_mesh.obj" download="pred_mesh.obj"><button kind="primary" class="css-15r570u edgvbvh1">Download Reconstructed Mesh!</button></a>'
             st.markdown(linko, unsafe_allow_html=True)
             #Acknow
             text_file = open("Ackn.md", "r")
