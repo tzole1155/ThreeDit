@@ -41,6 +41,7 @@ model_urls = {
 
 @classmethod
 def _get_cached_version(cls, abs_path: str):
+    #taken from https://discuss.streamlit.io/t/html-file-cached-by-streamlit/9289
     with cls._lock:
         return cls.get_content_version(abs_path)
 
@@ -181,8 +182,8 @@ def trigger_rerun():
 
 
 def main():
+    #Do not cache files by filename.
     StaticFileHandler._get_cached_version = _get_cached_version
-    #Use this for clearing cache!
     st.set_page_config(layout="wide")
     static_path = file_util.get_static_dir()
     urllib.request.urlretrieve(
