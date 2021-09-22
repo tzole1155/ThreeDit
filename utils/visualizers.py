@@ -36,6 +36,9 @@ class Visualizers(object):
         # filter out vertices
         vertices_to_remove = densities < np.quantile(densities,threshold)
         mesh.remove_vertices_by_mask(vertices_to_remove)
+        #rotate mesh
+        # R = mesh.get_rotation_matrix_from_xyz((0, np.pi / 2, np.pi))
+        # mesh.rotate(R, center=(0, 0, 0))
         # save mesh
         log.info("Exporting mesh has been finished!")
         return mesh
