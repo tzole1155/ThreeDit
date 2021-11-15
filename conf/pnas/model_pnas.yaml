@@ -1,0 +1,146 @@
+# @package _global_
+
+depth_threshold: ???
+order: ???
+
+conv_type: conv2d
+
+model:
+  monads:
+    clamp:
+      max_value: 11.0
+    threshold:
+      value: ${depth_threshold}
+    interpolate:
+      scale: 0.5
+      mode: nearest
+    spherical_grid:
+      width: 512
+      mode: pi
+      long_offset_pi: -0.5
+    icosahedron_vertices:
+      order: ${order}
+    icosahedron_faces:
+      order: ${order}
+    icosahedron_adjacent_faces:
+      order: ${order}
+    icosahedron_uvs:
+      order: ${order}
+    icosahedron_sample_nearest:
+      order: ${order}
+    deferred_rendering_depth:
+      rendered_width: 128
+      rendered_height: 64
+      far_clip: 20.0
+      aa_samples: 2
+      force_shared_light: false
+    vgg_features0:
+      architecture: vgg16
+      batch_norm: false
+      flip_color: true
+    vgg_features2:
+      architecture: vgg16
+      batch_norm: false
+      flip_color: true
+    vgg_features4:
+      architecture: vgg16
+      batch_norm: false
+      flip_color: true
+  
+  parameters:
+    initialization:
+      filename: ???
+      strict: false
+  
+  configuration:
+    encoder:
+      data: color
+      out: [features, '']
+    branch1:
+      features: features
+      out: depth_t_0
+    # branch2:
+    #   image: color
+    #   depth: depth
+    #   out: depth_refined
+
+  # modules:
+  #   branch2:
+  #     configuration:
+  #       detach_depth: false
+  #       residual: false
+  #     convolution:
+  #       type:  ${conv_type}
+
+  feedforward:
+    preprocess:      
+      clamp:
+        x: [depth]
+        out: [depth]
+      threshold:
+        x: [depth]
+        out: [mask]
+      # inverse_depth:
+      #   depth: [depth]
+      #   out: [depth_inv]
+      multiply:
+        x: [depth]
+        y: [mask]
+        out: [depth]
+    postprocess:
+      # inverse_depth:
+      #   depth: [depth_t_0]
+      #   out: [depth_inv_t_0]
+      spherical_grid:
+        tensor: [color]
+        out: [sgrid]
+      spherical_weights:
+        tensor: [color]
+        out: [sweights]
+      multiply:
+        x: [sweights,depth_t_0]
+        y: [mask,mask]
+        out: [mask_weighted,depth_t_0]  
+      spherical_deprojection:
+        depth: [depth_t_0,depth]
+        sgrid: [sgrid,sgrid]
+        out: [pcloud,pcloud_gt]
+      # spherical_weights:
+      #   tensor: [color]
+      #   out: [sweights]
+      normal_estimation:
+        points: [pcloud,pcloud_gt]
+        out: [normal,normal_gt]
+      # icosahedron_vertices:
+      #   tensor: [color]
+      #   out: [vertices]
+      # icosahedron_faces:
+      #   tensor: [color]
+      #   out: [faces]
+      # icosahedron_adjacent_faces:
+      #   tensor: [color]
+      #   out: [adjacent]
+      # icosahedron_uvs:
+      #   tensor: [color]
+      #   out: [uvs]
+      icosahedron_sample_nearest: # icosahedron_sample_mesh_linear: # icosahedron_sample_nearest:
+        image: [depth_t_0,depth]
+        out: [depth_t_0_sampled,depth_gt_sampled] 
+      threshold:
+        x: [depth_gt_sampled]
+        out: [mask_sampled]
+      extract_edges:
+        depth: [depth,depth_t_0]
+        out: [edges_gt,edges_t_0]
+      sobel_filter_2:
+        tensor: [depth,depth_t_0]
+        mask: [mask,mask]
+        out: [sf_2_gt,sf_2_t]
+      sobel_filter_5:
+        tensor: [depth,depth_t_0]
+        mask: [mask,mask]
+        out: [sf_5_gt,sf_5_t]
+      sobel_filter_1:
+        tensor: [depth,depth_t_0]
+        mask: [mask,mask]
+        out: [sf_1_gt,sf_1_t]

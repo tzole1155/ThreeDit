@@ -11,7 +11,8 @@ from streamlit.server.server import Server
 from streamlit import caching
 from streamlit import script_runner
 from torch.futures import S
-from unet.model import UNet as Model
+from unet.model import UNet
+from pnas.model import MultiBranch
 from utils.utils import Interpolate
 from utils.spherical import Spherical
 from utils.spherical_deprojection import SphericalDeprojection
@@ -32,11 +33,14 @@ from streamlit.server.server import StaticFileHandler
 import urllib.request
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+import imageio
+import toolz
 
 
 
 model_urls = {
     'UNet': 'https://github.com/tzole1155/ThreeDit/releases/download/Unet/unet.pth',
+    'Pnas_pre': 'https://github.com/tzole1155/ThreeDit/releases/download/Pnas/360V_pnas-epoch.49-rmse.0.41.ckpt'
 }
 
 @classmethod
@@ -69,7 +73,7 @@ def init_model(choice:str):
                 st.error(error_message)
                 raise RuntimeError(error_message)
         conf = omegaconf.OmegaConf.load(conf_path)
-        model = Model(conf.model.configuration)
+        model = UNet(conf.model.configuration)
         # checkpoint = torch.load(model_pt_path,
         #     map_location=lambda storage, loc: storage
         #     )
@@ -79,6 +83,22 @@ def init_model(choice:str):
 
         model.load_state_dict(checkpoint['state_dict'], False)
     
+    elif choice == 'Pnas_pre':
+        checkpoint = load_state_dict_from_url(model_urls[choice],
+                                              map_location=lambda storage, loc: storage,
+                                              progress=True)
+        conf_path = './conf/pnas/model_pnas.yaml'
+        if not os.path.isfile(conf_path):
+                error_message = f"Missing the model's configuration file({conf_path})"
+                st.error(error_message)
+                raise RuntimeError(error_message)
+        conf = omegaconf.OmegaConf.load(conf_path)
+        model = MultiBranch(conf.model.configuration)
+        model.load_state_dict(checkpoint['state_dict'], False)
+        #file = torch.load(checkpoint)
+        #model.load_state_dict(toolz.keymap(lambda k: k.replace('module.', ''), file))
+        #breakpoint()
+
     model.to(device)
     model.eval()
     
@@ -102,9 +122,13 @@ def inference(input,model,device):
 
 def get_depth_map(viz,depth,static_path):
     st.markdown("## Predicted depth map", unsafe_allow_html=True)
-    imgs = viz.export_depth(depth)
+    imgs = viz.export_depth(depth,static_path)
     #break
     return imgs
+
+def get_exr_map(depth,static_path):
+    pred_filename = os.path.join(static_path,'pred_depth.exr')
+    imageio.imwrite(pred_filename, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
 
 def get_point_cloud(viz,depth,color,static_path):
     device = depth.get_device()
@@ -202,9 +226,9 @@ def main():
 
     readme_text = st.markdown(md_string)
 
-    menu = ['UNet']
+    menu = ['UNet','Pnas_pre']
     st.sidebar.header('Model Selection')
-    choice = st.sidebar.selectbox('How would you like to be turn ?', menu)
+    choice = st.sidebar.selectbox('Please select one of the available models ?', menu)
     
     #init model
     model, device = init_model(choice)
@@ -236,6 +260,8 @@ def main():
                 md_warn.empty()
         #visualise outputs
         imgs = get_depth_map(viz,depth,static_path)
+        #if st.button('Download depth map'):
+        #get_exr_map(depth,static_path)
         col1, col2, col3 = st.columns([3,4,3])
         with col1:
             st.write("")
@@ -244,6 +270,9 @@ def main():
             #st.markdown("<p style='text-align: center;'>Predicted depth map</p>", unsafe_allow_html=True)
         with col3:
             st.write("")
+        #download depth map
+        linko= f'<a href="pred_depth.exr" download="pred_depth.exr"><button kind="primary" class="css-15r570u edgvbvh1">Download Predicted Depth Map!</button></a>'
+        st.markdown(linko, unsafe_allow_html=True)
         #point cloud
         pred_xyz,colors = get_point_cloud(viz,depth,input,static_path)
         text_file = open("./html/ply.html", "r")

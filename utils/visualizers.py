@@ -66,8 +66,14 @@ class Visualizers(object):
         min_v = torch.min(t.view(b, -1), dim=1, keepdim=True)[0].unsqueeze(2).unsqueeze(3)
         max_v = torch.max(t.view(b, -1), dim=1, keepdim=True)[0].unsqueeze(2).unsqueeze(3)
         return (t - min_v) / (max_v - min_v) 
-    
-    def export_depth(self, depth:torch.tensor) -> np.array:
+            
+
+    def export_depth(self, depth:torch.tensor,static_path:str) -> np.array:
+        #path = os.getcwd()
+        #ext = 'ext'
+        #p = os.path.join(path,'test.exr')
+        p = os.path.join(static_path,'pred_depth.exr')
+        imageio.imwrite(p, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
         depth = self._minmax_normalization(depth)
         turbo = functools.partial(self._matplotlib_colormap, cm.get_cmap('turbo'))
         #b, _, __, ___ = depth.shape
@@ -105,6 +111,7 @@ class Visualizers(object):
             el.append(plyfile.PlyElement.describe(face_rgb, 'face'))
 
         plyfile.PlyData(el, text=text).write(output_path)
+        log.info("Exporting ply has been finished!")
 
 def _calc_distances(pcloud: np.array)->Tuple:
     dist_to_ceiling = pcloud[:,:20][1].mean()
