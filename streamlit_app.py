@@ -122,7 +122,8 @@ def inference(input,model,device):
 
 def get_depth_map(viz,depth,static_path):
     st.markdown("## Predicted depth map", unsafe_allow_html=True)
-    imgs = viz.export_depth(depth,static_path)
+    p = os.path.join(static_path,'pred_depth.exr')
+    imgs = viz.export_depth(depth,p)
     #break
     return imgs
 
