@@ -75,7 +75,7 @@ class Visualizers(object):
         #p = os.path.join(path,'test.exr')
         p = os.path.join(static_path,'pred_depth.exr')
         #while not os.path.exists(p):
-        time.sleep(0.777)
+        time.sleep(1.5)
         #print("w8 for extracing depth map")
         imageio.imwrite(p, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
         depth = self._minmax_normalization(depth)
