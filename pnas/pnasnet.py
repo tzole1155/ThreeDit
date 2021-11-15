@@ -387,7 +387,7 @@ class Up(nn.Sequential):
 class PNASNet5Large(nn.Module):
     def __init__(self, 
         #decoder_scale:  int=1024,
-        pretrained:     bool=True,
+        pretrained:     bool=False,
         ckpt:           str='',
     ):
         super(PNASNet5Large, self).__init__()
