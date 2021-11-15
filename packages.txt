@@ -1,4 +1,5 @@
 libglu1-mesa
 libgl1-mesa-glx
+zlib1g-dev
 libopenexr-dev
 openexr
