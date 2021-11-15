@@ -76,7 +76,8 @@ class Visualizers(object):
         p = os.path.join(static_path,'pred_depth.exr')
         #while not os.path.exists(p):
         #time.sleep(1.5)
-        imageio.imwrite(p, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
+        #TODO: fix this issue in online version
+        #imageio.imwrite(p, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
         depth = self._minmax_normalization(depth)
         turbo = functools.partial(self._matplotlib_colormap, cm.get_cmap('turbo'))
         #b, _, __, ___ = depth.shape

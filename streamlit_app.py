@@ -274,8 +274,9 @@ def main():
         with col3:
             st.write("")
         #download depth map
-        linko= f'<a href="pred_depth.exr" download="pred_depth.exr"><button kind="primary" class="css-15r570u edgvbvh1">Download Predicted Depth Map!</button></a>'
-        st.markdown(linko, unsafe_allow_html=True)
+        #TODO: fix this
+        #linko= f'<a href="pred_depth.exr" download="pred_depth.exr"><button kind="primary" class="css-15r570u edgvbvh1">Download Predicted Depth Map!</button></a>'
+        #st.markdown(linko, unsafe_allow_html=True)
         #point cloud
         pred_xyz,colors = get_point_cloud(viz,depth,input,static_path)
         text_file = open("./html/ply.html", "r")
