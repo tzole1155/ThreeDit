@@ -11,6 +11,7 @@ from matplotlib.colors import Colormap
 import plyfile
 import open3d as o3d
 import logging
+import time
 
 log = logging.getLogger(__name__)
 
@@ -73,8 +74,9 @@ class Visualizers(object):
         #ext = 'ext'
         #p = os.path.join(path,'test.exr')
         p = os.path.join(static_path,'pred_depth.exr')
-        while not os.path.exists(p):
-            print("w8 for extracing depth map")
+        #while not os.path.exists(p):
+        time.sleep(0.777)
+        #print("w8 for extracing depth map")
         imageio.imwrite(p, (depth.cpu().numpy())[0, :, :, :].transpose(1,2,0))
         depth = self._minmax_normalization(depth)
         turbo = functools.partial(self._matplotlib_colormap, cm.get_cmap('turbo'))
