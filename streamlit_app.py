@@ -6,11 +6,15 @@ import torch
 import streamlit as st
 from streamlit import components
 from streamlit import file_util
-import streamlit.report_thread as ReportThread
-from streamlit.server.server import Server
-from streamlit import caching
-from streamlit import script_runner
-from torch.futures import S
+# try:
+#     #import streamlit.ReportThread as ReportThread
+#     from streamlit import ReportThread
+#     from streamlit import Server
+# except:
+#     import streamlit.report_thread as ReportThread
+#     from streamlit.server.server import Server
+# from streamlit import caching
+# from streamlit import script_runner
 from unet.model import UNet
 from pnas.model import MultiBranch
 from utils.utils import Interpolate
