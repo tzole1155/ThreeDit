@@ -1,7 +1,5 @@
 from genericpath import exists
-import logging
 import PIL
-from streamlit.state.session_state import WidgetArgs
 import torch
 import streamlit as st
 from streamlit import components
@@ -32,13 +30,11 @@ import io
 from PIL import Image
 import numpy as np
 import open3d as o3d # this should not be included when deployed in GitHub
-import time
-from streamlit.server.server import StaticFileHandler
+from streamlit.web.server.routes import StaticFileHandler
 import urllib.request
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import imageio
-import toolz
 
 
 
