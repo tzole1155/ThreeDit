@@ -50,7 +50,7 @@ def _get_cached_version(cls, abs_path: str):
         return cls.get_content_version(abs_path)
 
 
-@st.cache_data
+@st.cache_resource
 def init_model(choice:str):
     #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
