@@ -36,6 +36,7 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import imageio
 from pathlib import Path
+import tempfile
 
 
 
@@ -213,8 +214,8 @@ def main():
     StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
     static_path = file_util.get_static_dir()
-    import subprocess
-    subprocess.call(['chmod', '-R', '+w', static_path])
+    # import subprocess
+    # subprocess.call(['chmod', '-R', '+w', static_path])
     # static_path = Path("data")
     # static_path.mkdir(exist_ok=True)
     urllib.request.urlretrieve(
