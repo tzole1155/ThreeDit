@@ -212,9 +212,11 @@ def main():
     #Do not cache files by filename.
     StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
-    # static_path = file_util.get_static_dir()
-    static_path = Path("data")
-    static_path.mkdir(exist_ok=True)
+    static_path = file_util.get_static_dir()
+    import subprocess
+    subprocess.call(['chmod', '-R', '+w', 'static_path'])
+    # static_path = Path("data")
+    # static_path.mkdir(exist_ok=True)
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
