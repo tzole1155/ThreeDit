@@ -214,7 +214,7 @@ def main():
     st.set_page_config(layout="wide")
     static_path = file_util.get_static_dir()
     import subprocess
-    subprocess.call(['chmod', '-R', '+w', 'static_path'])
+    subprocess.call(['chmod', '-R', '+w', static_path])
     # static_path = Path("data")
     # static_path.mkdir(exist_ok=True)
     urllib.request.urlretrieve(
