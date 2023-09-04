@@ -218,7 +218,7 @@ def main():
     # subprocess.call(['chmod', '-R', '+w', static_path])
     # static_path = Path("static")
     # static_path.mkdir(exist_ok=True)
-    static_path = './app/static/'
+    static_path = Path('/mount/src/threedit/static')
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
