@@ -215,8 +215,8 @@ def main():
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
-    banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
-    st.image(banner, use_column_width  = True)
+    # banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
+    # st.image(banner, use_column_width  = True)
     st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
 
     text_file = open("intro.md", "r")
