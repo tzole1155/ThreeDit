@@ -1,3 +1,4 @@
+sudo chown -R www-data:www-data /home/adminuser/venv/lib/python3.9/site-packages/streamlit/static/
 [theme]
 
 base="dark"#
