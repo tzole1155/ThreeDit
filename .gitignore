@@ -130,3 +130,6 @@ dmypy.json
 
 *.pth
 weights/
+
+# store data
+data/
