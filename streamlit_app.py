@@ -35,6 +35,7 @@ import urllib.request
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import imageio
+from pathlib import Path
 
 
 
@@ -211,12 +212,14 @@ def main():
     #Do not cache files by filename.
     StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
-    static_path = file_util.get_static_dir()
-    # urllib.request.urlretrieve(
-    #     'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
-    #     os.path.join(static_path,"banner.png"))
-    # banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
-    # st.image(banner, use_column_width  = True)
+    # static_path = file_util.get_static_dir()
+    static_path = Path("data")
+    static_path.mkdir(exist_ok=True)
+    urllib.request.urlretrieve(
+        'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
+        os.path.join(static_path,"banner.png"))
+    banner = PIL.Image.open(os.path.join(static_path,"banner.png"))
+    st.image(banner, use_column_width  = True)
     st.markdown("<h1 style='text-align: center; color: white;'>Reconstruct your room form a single panorama</h1>", unsafe_allow_html=True)
 
     text_file = open("intro.md", "r")
