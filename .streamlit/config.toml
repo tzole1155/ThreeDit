@@ -18,11 +18,5 @@ textColor="#fafafa"
 # Default: "sans serif"
 font="monospace"
 
-
-
-
 [server]
 enableStaticServing = true
-
-[global]
-developmentMode = true
