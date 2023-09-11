@@ -216,9 +216,9 @@ def main():
     # static_path = file_util.get_static_dir()
     # static_path = './app/static'
     static_path = "/mount/src/threedit/static"
-    if not os.path.exists(static_folder):
+    if not os.path.exists(static_path):
         # Create the static folder
-        os.mkdir(static_folder)
+        os.mkdir(static_path)
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
         os.path.join(static_path,"banner.png"))
