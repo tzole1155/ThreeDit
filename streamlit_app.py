@@ -213,13 +213,7 @@ def main():
     # Do not cache files by filename.
     StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
-    import subprocess
     static_path = file_util.get_static_dir()
-    try:
-        subprocess.run(["sudo", "chmod", "-R", "755", static_path], check=True)
-        print("Permissions changed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
     # static_path = '/app/static'
     urllib.request.urlretrieve(
         'https://raw.githubusercontent.com/tzole1155/ThreeDit/main/Images/Banner.png',
