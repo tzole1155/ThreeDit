@@ -149,7 +149,7 @@ def get_point_cloud(viz,depth,color,static_path):
         if isinstance(rgb,np.ndarray):
             colors = rgb.reshape(3, - 1).astype(np.uint8)
         else:
-            colors = rgb.reshape(3, - 1).cpu().numpy().astype(np.uint8)    
+            colors = rgb.reshape(3, - 1).cpu().numpy().astype(np.uint8)
         pred_filename = os.path.join(static_path,'pred_pointcloud.ply')
         if os.path.isfile(pred_filename):
             os.remove(pred_filename)
@@ -290,6 +290,7 @@ def main():
         text_file = open("./html/ply.html", "r")
         #read whole file to a string
         html_string = text_file.read()
+        st.markdown(f"static path {static_path}", unsafe_allow_html=True)
         st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
         st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
