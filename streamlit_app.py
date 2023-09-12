@@ -290,7 +290,7 @@ def main():
         text_file = open("./html/ply.html", "r")
         #read whole file to a string
         html_string = text_file.read()
-        st.markdown(f"static path {static_path}", unsafe_allow_html=True)
+        st.markdown(f"static path {os.listdir(static_path)}", unsafe_allow_html=True)
         st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
         st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
