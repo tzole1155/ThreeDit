@@ -215,9 +215,11 @@ def main():
     # Do not cache files by filename.
     StaticFileHandler._get_cached_version = _get_cached_version
     st.set_page_config(layout="wide")
+    with tempfile.TemporaryDirectory() as static_path:
+        st.write('Created temporary directory:', static_path)
     # static_path = file_util.get_static_dir()
     # static_path = './app/static'
-    static_path = "/mount/src/threedit/static"
+    # static_path = "/mount/src/threedit/static"
     if not os.path.exists(static_path):
         # Create the static folder
         os.mkdir(static_path)
