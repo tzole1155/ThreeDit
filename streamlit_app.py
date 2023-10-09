@@ -289,16 +289,38 @@ def main():
         #st.markdown(linko, unsafe_allow_html=True)
         #point cloud
         pred_xyz,colors = get_point_cloud(viz,depth,input,static_path)
+        ply_file_path = f"{static_path}/pred_pointcloud.ply"
         text_file = open("./html/ply.html", "r")
         #read whole file to a string
         html_string = text_file.read()
-        st.markdown(f"static path {os.listdir(static_path)}", unsafe_allow_html=True)
+        # Inject the ply_file_path into the JavaScript code
+        # html_string = html_string.replace('{ PLYLoader }', '{{ PLYLoader }}')
+        # html_string = html_string.replace('{ OrbitControls }', '{{ OrbitControls }}')
+        # print(html_string)
+        # st.markdown(f"html_string {html_string}", unsafe_allow_html=True)
+        # html_string = html_string.format(
+        #     ply_file_path
+        #     )
+        html_string = html_string.replace('{ply_file_path}', ply_file_path)
+        # st.markdown(f"html_string {html_string}", unsafe_allow_html=True)
+        # st.markdown(f"static path {os.listdir(static_path)}", unsafe_allow_html=True)
         st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
         st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
         st.success("Point cloud has been created!")
-        linko= f'<a href="{static_path}/pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
-        st.markdown(linko, unsafe_allow_html=True)
+        # linko= f'<a href="{static_path}/pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
+        # st.markdown(linko, unsafe_allow_html=True)
+        # Ensure the file exists
+        try:
+            with open(f"{static_path}/pred_pointcloud.ply", 'rb') as file:
+                st.download_button(
+                    label="Download Point Cloud!",
+                    data=file,
+                    file_name="pred_pointcloud.ply",
+                    mime="application/octet-stream",
+                )
+        except FileNotFoundError:
+            st.error('File not found!')
         #mesh
         if st.button('Reconstruct mesh'):
             export_mesh(viz,pred_xyz,colors,static_path)

@@ -50,7 +50,7 @@
                 // }
 
 				let loader = new PLYLoader();
-				loader.load( 'pred_pointcloud.ply', function ( geometry ) {
+				loader.load( '{ply_file_path}', function ( geometry ) {
 					geometry.computeFaceNormals();
 
 					let material = new THREE.PointsMaterial( {size: 0.01} );
