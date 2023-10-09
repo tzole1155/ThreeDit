@@ -19,4 +19,4 @@ textColor="#fafafa"
 font="monospace"
 
 [server]
-enableStaticServing = true
+enableStaticServing = false
