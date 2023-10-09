@@ -297,7 +297,7 @@ def main():
         st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
         h1 = components.v1.html(html_string, height=600)
         st.success("Point cloud has been created!")
-        linko= f'<a href="pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
+        linko= f'<a href="{static_path}/pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
         st.markdown(linko, unsafe_allow_html=True)
         #mesh
         if st.button('Reconstruct mesh'):
