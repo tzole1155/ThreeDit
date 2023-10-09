@@ -292,6 +292,8 @@ def main():
         ply_file_path = f"{static_path}/pred_pointcloud.ply"
         text_file = open("./html/ply.html", "r")
         #read whole file to a string
+        # with open('./html/ply.html', 'r') as file:
+        #     myfile = file.read().replace('\n', '')
         html_string = text_file.read()
         # Inject the ply_file_path into the JavaScript code
         # html_string = html_string.replace('{ PLYLoader }', '{{ PLYLoader }}')
@@ -301,12 +303,18 @@ def main():
         # html_string = html_string.format(
         #     ply_file_path
         #     )
-        html_string = html_string.replace('{ply_file_path}', ply_file_path)
+        # ply_content = b""
+        # import base64
+        # with open(ply_file_path, "wb") as f:
+        #     f.write(ply_content)
+        # Convert to base64 for embedding in HTML/JS
+        # ply_base64 = base64.b64encode(ply_content).decode()
+        # html_string = html_string.replace('{ply_file_path}', ply_content)
         # st.markdown(f"html_string {html_string}", unsafe_allow_html=True)
         # st.markdown(f"static path {os.listdir(static_path)}", unsafe_allow_html=True)
-        st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
-        st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
-        h1 = components.v1.html(html_string, height=600)
+        # st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
+        # st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
+        # h1 = components.v1.html(html_string, height=600)
         st.success("Point cloud has been created!")
         # linko= f'<a href="{static_path}/pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
         # st.markdown(linko, unsafe_allow_html=True)
