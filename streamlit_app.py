@@ -291,10 +291,158 @@ def main():
         pred_xyz,colors = get_point_cloud(viz,depth,input,static_path)
         ply_file_path = f"{static_path}/pred_pointcloud.ply"
         text_file = open("./html/ply.html", "r")
-        #read whole file to a string
+        # read whole file to a string
         # with open('./html/ply.html', 'r') as file:
         #     myfile = file.read().replace('\n', '')
-        html_string = text_file.read()
+        # html_string = text_file.read()
+        # NOTE: DEBUG
+        ply_content = b""
+        import base64
+        with open(ply_file_path, "rb") as f:
+            ply_content = f.read()
+        # Convert to base64 for embedding in HTML/JS
+        ply_base64 = base64.b64encode(ply_content).decode()
+
+        html_string = f"""
+                <!DOCTYPE html>
+                <html lang="en">
+
+                <head>
+                    <title>three.js webgl - PLY</title>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+                    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                    <meta http-equiv="Expires" content="-1" />
+
+                </head>
+
+                <body>
+
+
+                    <script type="module">
+
+                        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+                        import {{ PLYLoader }} from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/PLYLoader.js';
+                        import {{ OrbitControls }} from 'https://tzole1155.github.io/360depth/js/controls/OrbitControls.js';
+                        let container, stats;
+                        let camera, cameraTarget, scene, renderer;
+
+                        THREE.Cache.enabled = false
+
+                        var ply_base64 = '{ply_base64}';
+                        var ply_data = base64ToArrayBuffer(ply_base64);
+                        
+                        init();
+                        animate();
+                        
+
+                        function init() {{
+
+                            THREE.Cache.clear();
+
+                            container = document.createElement('div');
+                            document.body.appendChild(container);
+                            camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 15);
+                            camera.position.set(4.25, 2.92, 6.56);
+                            cameraTarget = new THREE.Vector3(0, - 0.1, 0);
+                            scene = new THREE.Scene();
+                            scene.background = new THREE.Color(0x333F49);
+                            const controls = new OrbitControls(camera, container);
+                            controls.enableDamping = true;
+
+                            let loader = new PLYLoader();
+                            let geometry = loader.parse(ply_data);
+                            
+                            geometry.computeFaceNormals();
+
+                            let material = new THREE.PointsMaterial({{ size: 0.01 }});
+                            material.vertexColors = true;
+                            material.needsUpdate = true;
+                            geometry.needsUpdate = true;
+                            let mesh = new THREE.Points(geometry, material);
+                            mesh.position.x = 0;
+                            mesh.position.y = -1;
+                            mesh.position.z = 0;
+                            mesh.rotateY(Math.PI / 2);
+                            mesh.rotateZ(Math.PI);
+                            mesh.scale.multiplyScalar(0.5);
+                            mesh.castShadow = true;
+                            mesh.receiveShadow = true;
+                            scene.add(mesh);
+
+                            // Lights
+
+                            scene.add(new THREE.HemisphereLight(0x443333, 0x111122));
+
+                            // renderer
+                            renderer = new THREE.WebGLRenderer({{ antialias: true }});
+                            renderer.setPixelRatio(window.devicePixelRatio);
+                            renderer.setSize(window.innerWidth, window.innerHeight);
+                            renderer.outputEncoding = THREE.sRGBEncoding;
+                            renderer.shadowMap.enabled = true;
+                            container.appendChild(renderer.domElement);
+                            // resize
+                            window.addEventListener('resize', onWindowResize);
+                        }}
+
+                        function addShadowedLight(x, y, z, color, intensity) {{
+
+                            const directionalLight = new THREE.DirectionalLight(color, intensity);
+                            directionalLight.position.set(x, y, z);
+                            scene.add(directionalLight);
+
+                            directionalLight.castShadow = true;
+
+                            const d = 1;
+                            directionalLight.shadow.camera.left = - d;
+                            directionalLight.shadow.camera.right = d;
+                            directionalLight.shadow.camera.top = d;
+                            directionalLight.shadow.camera.bottom = - d;
+
+                            directionalLight.shadow.camera.near = 1;
+                            directionalLight.shadow.camera.far = 4;
+
+                            directionalLight.shadow.mapSize.width = 1024;
+                            directionalLight.shadow.mapSize.height = 1024;
+
+                            directionalLight.shadow.bias = - 0.001;
+
+                        }}
+
+                        function onWindowResize() {{
+
+                            camera.aspect = window.innerWidth / window.innerHeight;
+                            camera.updateProjectionMatrix();
+                            renderer.setSize(window.innerWidth, window.innerHeight);
+
+                        }}
+
+                        function animate() {{
+                            requestAnimationFrame(animate);
+                            render();
+                        }}
+
+                        function render() {{
+                            renderer.render(scene, camera);
+                        }}
+
+                        // Decoding base64 to ArrayBuffer
+                        function base64ToArrayBuffer(base64) {{
+                            var binary_string = window.atob(base64);
+                            var len = binary_string.length;
+                            var bytes = new Uint8Array(len);
+                            for (var i = 0; i < len; i++) {{
+                                bytes[i] = binary_string.charCodeAt(i);
+                            }}
+                            return bytes.buffer;
+                        }}
+
+                    </script>
+                </body>
+
+                </html>
+        """
+        # NOTE: DEBUG
         # Inject the ply_file_path into the JavaScript code
         # html_string = html_string.replace('{ PLYLoader }', '{{ PLYLoader }}')
         # html_string = html_string.replace('{ OrbitControls }', '{{ OrbitControls }}')
@@ -303,18 +451,12 @@ def main():
         # html_string = html_string.format(
         #     ply_file_path
         #     )
-        # ply_content = b""
-        # import base64
-        # with open(ply_file_path, "wb") as f:
-        #     f.write(ply_content)
-        # Convert to base64 for embedding in HTML/JS
-        # ply_base64 = base64.b64encode(ply_content).decode()
         # html_string = html_string.replace('{ply_file_path}', ply_content)
         # st.markdown(f"html_string {html_string}", unsafe_allow_html=True)
         # st.markdown(f"static path {os.listdir(static_path)}", unsafe_allow_html=True)
         # st.markdown("## Predicted Point Cloud", unsafe_allow_html=True)
         # st.markdown("Inspect the predicted point cloud through the interactive 3D Model Viewer", unsafe_allow_html=True)
-        # h1 = components.v1.html(html_string, height=600)
+        h1 = components.v1.html(html_string, height=600)
         st.success("Point cloud has been created!")
         # linko= f'<a href="{static_path}/pred_pointcloud.ply" download="pred_pointcloud.ply"><button kind="primary" class="css-15r570u edgvbvh1">Download Point Cloud!</button></a>'
         # st.markdown(linko, unsafe_allow_html=True)
